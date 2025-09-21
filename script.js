@@ -5,23 +5,25 @@ const gallery = document.getElementById('video-gallery');
 async function loadVimeoVideos() {
   try {
     const response = await fetch(`https://api.vimeo.com/users/${userId}/videos`, {
-      headers: {
-        'Authorization': `Bearer ${accessTikon}`
-      }
+      headers: { 'Authorization': `Bearer ${accessTikon}` }
     });
 
     const data = await response.json();
 
-    data.data.forEach(video => {
+    data.data.forEach((video, index) => {
       const videoId = video.uri.split('/').pop();
-      const thumbnailUrl = video.pictures.sizes[3].link; // Medium thumbnail
+      const thumbnailUrl = video.pictures.sizes[3].link;
 
       const thumb = document.createElement('div');
       thumb.classList.add('video-thumb');
       thumb.innerHTML = `<img src="${thumbnailUrl}" alt="${video.name}">`;
 
+      // Dynamic fade-in animation with staggered delay
+      thumb.style.animation = `fadeInThumb 0.8s forwards`;
+      thumb.style.animationDelay = `${index * 0.1}s`;
+
       thumb.addEventListener('click', () => {
-        openFullscreenVimeo(videoId);
+        openFullscreenVimeo(videoId); // Or openLightbox(videoId) for hybrid
       });
 
       gallery.appendChild(thumb);
@@ -34,7 +36,7 @@ async function loadVimeoVideos() {
 // Function to open fullscreen Vimeo embed
 function openFullscreenVimeo(videoId) {
   const iframe = document.createElement('iframe');
-  iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+  iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
   iframe.allow = "autoplay; fullscreen";
   iframe.style.position = "fixed";
   iframe.style.top = "0";
