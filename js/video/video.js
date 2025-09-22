@@ -122,17 +122,29 @@ async function loadVimeoVideos() {
             thumb.style.animationDelay = `${index * 0.1}s`;
 
             thumb.addEventListener('click', () => {
-                // Add mobile bump animation class
-                thumb.classList.add('bump-once');
+                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                    // 📱 Mobile/Tablet: bump + haptic vibration
+                    thumb.classList.add('bump-once');
 
-                // Remove the class after animation ends so it can trigger again next tap
-                thumb.addEventListener('animationend', () => {
-                    thumb.classList.remove('bump-once');
-                }, { once: true });
+                    // Trigger haptic vibration (if supported)
+                    if (navigator.vibrate) {
+                        navigator.vibrate(80); // short buzz (80ms)
+                    }
 
-                // Then open Vimeo fullscreen
-                openFullscreenVimeo(videoId);
-            });
+                    // Remove bump class after animation ends
+                    thumb.addEventListener('animationend', () => {
+                        thumb.classList.remove('bump-once');
+                    }, { once: true });
+
+                    // Open fullscreen video after bump delay
+                    setTimeout(() => {
+                        openFullscreenVimeo(videoId);
+                    }, 300);
+                } else {
+                    // 🖥 Desktop: open instantly
+                    openFullscreenVimeo(videoId);
+                }
+            })
 
             gallery.appendChild(thumb);
         });
