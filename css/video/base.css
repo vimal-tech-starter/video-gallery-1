@@ -1,0 +1,230 @@
+/* Animated gradient background (Vimeo colors) */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+    color: #fff;
+    background: linear-gradient(-45deg, #1ab7ea, #00a9e0, #6dcff6, #1ab7ea);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Video gallery grid */
+#video-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Video thumbnails */
+.video-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    /* for fade-in animation */
+}
+
+/* Dark overlay */
+.video-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.video-thumb img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ✅ Hover effect: slight zoom + vibrate + brightness bump */
+/* .video-thumb:hover {
+  animation: vibrate 0.3s linear;
+  filter: brightness(1.2);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.7);
+  z-index: 2;
+} */
+
+/* Hover effects: scale + shadow + glow */
+/* ✅ Hover effect: zoom + glow + continuous vibration */
+.video-thumb:hover {
+    transform: scale(1.05);
+    /* base zoom */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(26, 183, 234, 0.6);
+    /* subtle blue glow */
+    filter: brightness(1.2);
+
+    animation: vibrate 0.3s linear infinite;
+    /* keeps looping */
+    /* runs once per hover */
+    z-index: 2;
+    /* box-shadow: 0 0 15px rgba(0, 200, 255, 0.7); */
+}
+
+/* Play icon */
+.video-thumb::before {
+    content: '▶';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+}
+
+/* Fade-in animation */
+@keyframes fadeInThumb {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-out animation */
+@keyframes fadeOutThumb {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+}
+
+.fade-out {
+    animation: fadeOutThumb 0.6s forwards;
+}
+
+/* Pulsating glow */
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(26, 183, 234, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(26, 183, 234, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(26, 183, 234, 0.4);
+    }
+}
+
+/* Vibrate animation */
+@keyframes vibrate {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-2px);
+    }
+
+    40% {
+        transform: translateX(2px);
+    }
+
+    60% {
+        transform: translateX(-2px);
+    }
+
+    80% {
+        transform: translateX(2px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Vibrate (used for hover on desktop) */
+@keyframes vibrate {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-2px);
+    }
+
+    40% {
+        transform: translateX(2px);
+    }
+
+    60% {
+        transform: translateX(-2px);
+    }
+
+    80% {
+        transform: translateX(2px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Bump animation for mobile tap */
+@keyframes bump {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.1);
+    }
+
+    60% {
+        transform: scale(0.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Mobile tap = bump (triggered with JS by adding this class) */
+.video-thumb.bump-once {
+    animation: bump 0.4s ease;
+}
